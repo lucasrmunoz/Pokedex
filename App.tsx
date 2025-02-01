@@ -7,8 +7,8 @@
 
 import React from 'react';
 import type {PropsWithChildren} from 'react';
-import Header from './Libraries/NewAppScreen/components/Header';
-import {useQuery} from '@apollo/client';
+// import Header from './Libraries/NewAppScreen/components/Header';
+// import {useQuery} from '@apollo/client';
 import {
   SafeAreaView,
   ScrollView,
