@@ -9,6 +9,8 @@ import React from 'react';
 import type {PropsWithChildren} from 'react';
 import { ApolloProvider } from '@apollo/client';
 import client from './apolloClient'; // Adjust the path if necessary
+import { useQuery } from '@apollo/client';
+import {WELCOME_MESSAGE_QUERY} from './graphql/queries';
 // import Header from './Libraries/NewAppScreen/components/Header';
 // import {useQuery} from '@apollo/client';
 import {
@@ -21,13 +23,8 @@ import {
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import Colors from './src/theme/colors';
+import Header from './src/components/Header';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -59,6 +56,29 @@ function Section({children, title}: SectionProps): React.JSX.Element {
   );
 }
 
+function WelcomeMessageSection(): React.JSX.Element {
+  const {loading, error, data} = useQuery(WELCOME_MESSAGE_QUERY);
+
+  if (loading) {return (
+    <Section title="Loading">
+      Fetching welcome message...
+    </Section>
+  );}
+
+
+  if (error) {return (
+    <Section title="Error">
+      Error fetching message: {error.message}
+    </Section>
+  );}
+
+  return (
+    <Section title="Server Message">
+      {data.welcomeMessage}
+    </Section>
+  );
+}
+
 function App(): React.JSX.Element {
   const isDarkMode = true; // useColorScheme() === 'dark';
 
@@ -81,20 +101,14 @@ function App(): React.JSX.Element {
             style={{
               backgroundColor: isDarkMode ? Colors.black : Colors.white,
             }}>
-            <Section title="Step One">
-              Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-              screen and then come back to see your edits.
+            <Section title="Welcome">
+              Start building your Pokemon application here!
             </Section>
-            <Section title="See Your Changes">
-              <ReloadInstructions />
-            </Section>
-            <Section title="Debug">
-              <DebugInstructions />
-            </Section>
+            <WelcomeMessageSection />
             <Section title="Learn More">
               Read the docs to discover what to do next:
             </Section>
-            <LearnMoreLinks />
+
           </View>
         </ScrollView>
       </SafeAreaView>
