@@ -10,7 +10,7 @@ import type {PropsWithChildren} from 'react';
 import { ApolloProvider } from '@apollo/client';
 import client from './apolloClient'; // Adjust the path if necessary
 import { useQuery } from '@apollo/client';
-import {WELCOME_MESSAGE_QUERY} from './graphql/queries';
+import {WELCOME_MESSAGE_QUERY, GET_POKEMON_BY_NAME} from './graphql/queries';
 // import Header from './Libraries/NewAppScreen/components/Header';
 // import {useQuery} from '@apollo/client';
 import {
@@ -79,6 +79,36 @@ function WelcomeMessageSection(): React.JSX.Element {
   );
 }
 
+function PokemonSection(): React.JSX.Element {
+  const {loading, error, data} = useQuery(GET_POKEMON_BY_NAME, {
+    variables: { name: "squirtle" }
+  });
+  
+  if (loading) return (
+    <Section title="Loading">
+      Fetching Pokemon data...
+    </Section>
+  );
+
+  if (error) return (
+    <Section title="Error">
+      Error fetching Pokemon: {error.message}
+    </Section>
+  );
+
+  return (
+    <View>
+      <Text style={styles.pokemonHeader}>
+        {data.pokemonByName.name.toUpperCase()}
+      </Text>
+      <View style={styles.pokemonDetails}>
+        <Text style={styles.detailText}>ID: {data.pokemonByName.id}</Text>
+        <Text style={styles.detailText}>Type: {data.pokemonByName.type}</Text>
+      </View>
+    </View>
+  );
+}
+
 function App(): React.JSX.Element {
   const isDarkMode = true; // useColorScheme() === 'dark';
 
@@ -104,7 +134,7 @@ function App(): React.JSX.Element {
             <Section title="Welcome">
               Start building your Pokemon application here!
             </Section>
-            <WelcomeMessageSection />
+            <PokemonSection />
             <Section title="Learn More">
               Read the docs to discover what to do next:
             </Section>
@@ -132,6 +162,23 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
+  },
+  pokemonHeader: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 20,
+    color: Colors.white,
+  },
+  pokemonDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  detailText: {
+    fontSize: 18,
+    color: Colors.white,
   },
 });
 
