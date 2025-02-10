@@ -13,7 +13,6 @@ export const GET_POKEMON_BY_NAME = gql`
       id
       name
       type
-      // Add other fields you need
     }
   }
 `;
@@ -25,7 +24,6 @@ export const GET_POKEMON_BY_ID = gql`
       id
       name
       type
-      // Add other fields you need
     }
   }
 `;
