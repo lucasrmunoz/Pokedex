@@ -33,7 +33,7 @@ type SectionProps = PropsWithChildren<{
   title: string;
 }>;
 
-function SearchSection(): React.JSX.Element {
+function PokemonSearchBox(): React.JSX.Element {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const isDarkMode = true;
@@ -99,13 +99,24 @@ function SearchSection(): React.JSX.Element {
           <Text style={styles.pokemonResultName}>
             {data.pokemonByName.name.toUpperCase()}
           </Text>
-          <View style={styles.pokemonResultDetails}>
-            <Text style={styles.pokemonResultText}>
-              ID: {data.pokemonByName.id}
-            </Text>
-            <Text style={styles.pokemonResultText}>
-              Type: {data.pokemonByName.type}
-            </Text>
+          
+          {/* Key-Value Pairs Section */}
+          <View style={styles.keyValueSection}>
+            <Text style={styles.sectionTitle}>Pokemon Details</Text>
+            <View style={styles.keyValueContainer}>
+              <View style={styles.keyValueRow}>
+                <Text style={styles.keyText}>ID:</Text>
+                <Text style={styles.valueText}>{data.pokemonByName.id}</Text>
+              </View>
+              <View style={styles.keyValueRow}>
+                <Text style={styles.keyText}>Name:</Text>
+                <Text style={styles.valueText}>{data.pokemonByName.name}</Text>
+              </View>
+              <View style={styles.keyValueRow}>
+                <Text style={styles.keyText}>Type:</Text>
+                <Text style={styles.valueText}>{data.pokemonByName.type}</Text>
+              </View>
+            </View>
           </View>
         </View>
       )}
@@ -222,7 +233,7 @@ function App(): React.JSX.Element {
             style={{
               backgroundColor: isDarkMode ? Colors.black : Colors.white,
             }}>
-              <SearchSection />
+              <PokemonSearchBox />
             <WelcomeSquirtleSection />
             <PokemonSection />
             <Section title="Learn More">
@@ -327,6 +338,35 @@ const styles = StyleSheet.create({
   pokemonResultText: {
     fontSize: 16,
     color: Colors.white,
+  },
+  keyValueSection: {
+    marginTop: 16,
+  },
+  keyValueContainer: {
+    backgroundColor: Colors.black,
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 8,
+  },
+  keyValueRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.darker,
+  },
+  keyText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.light,
+    flex: 1,
+  },
+  valueText: {
+    fontSize: 16,
+    color: Colors.white,
+    flex: 2,
+    textAlign: 'right',
   },
 });
 
