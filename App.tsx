@@ -90,14 +90,14 @@ function PokemonSearchBox(): React.JSX.Element {
 
       {error && (
         <Text style={[styles.resultText, {color: Colors.light}]}>
-          Pokemon "{searchQuery}" not found!
+          Pokemon "{searchQuery}" not found! - {error.message}
         </Text>
       )}
 
-      {data && data.pokemonByName && (
+      {data && data.pokemon && (
         <View style={styles.pokemonResult}>
           <Text style={styles.pokemonResultName}>
-            {data.pokemonByName.name.toUpperCase()}
+            {data.pokemon.name.toUpperCase()}
           </Text>
           
           {/* Key-Value Pairs Section */}
@@ -106,15 +106,19 @@ function PokemonSearchBox(): React.JSX.Element {
             <View style={styles.keyValueContainer}>
               <View style={styles.keyValueRow}>
                 <Text style={styles.keyText}>ID:</Text>
-                <Text style={styles.valueText}>{data.pokemonByName.id}</Text>
+                <Text style={styles.valueText}>{data.pokemon.id}</Text>
               </View>
               <View style={styles.keyValueRow}>
                 <Text style={styles.keyText}>Name:</Text>
-                <Text style={styles.valueText}>{data.pokemonByName.name}</Text>
+                <Text style={styles.valueText}>{data.pokemon.name}</Text>
               </View>
               <View style={styles.keyValueRow}>
-                <Text style={styles.keyText}>Type:</Text>
-                <Text style={styles.valueText}>{data.pokemonByName.type}</Text>
+                <Text style={styles.keyText}>Types:</Text>
+                <Text style={styles.valueText}>
+                  {data.pokemon.types && data.pokemon.types.length > 0
+                    ? data.pokemon.types.join(', ')
+                    : 'No types found'}
+                </Text>
               </View>
             </View>
           </View>
@@ -178,8 +182,8 @@ function WelcomeSquirtleSection(): React.JSX.Element {
   return (
     <Section title="Welcome">
       Hi,{' '}
-      {data.pokemonByName.name.charAt(0).toUpperCase() +
-        data.pokemonByName.name.slice(1)}
+      {data.pokemon.name.charAt(0).toUpperCase() +
+        data.pokemon.name.slice(1)}
       !
     </Section>
   );
@@ -201,11 +205,15 @@ function PokemonSection(): React.JSX.Element {
   return (
     <View>
       <Text style={styles.pokemonHeader}>
-        {data.pokemonByName.name.toUpperCase()}
+        {data.pokemon.name.toUpperCase()}
       </Text>
       <View style={styles.pokemonDetails}>
-        <Text style={styles.detailText}>ID: {data.pokemonByName.id}</Text>
-        <Text style={styles.detailText}>Type: {data.pokemonByName.type}</Text>
+        <Text style={styles.detailText}>ID: {data.pokemon.id}</Text>
+        <Text style={styles.detailText}>
+          Types: {data.pokemon.types && data.pokemon.types.length > 0
+            ? data.pokemon.types.join(', ')
+            : 'No types found'}
+        </Text>
       </View>
     </View>
   );
@@ -234,6 +242,7 @@ function App(): React.JSX.Element {
               backgroundColor: isDarkMode ? Colors.black : Colors.white,
             }}>
               <PokemonSearchBox />
+            <WelcomeMessageSection />
             <WelcomeSquirtleSection />
             <PokemonSection />
             <Section title="Learn More">

@@ -9,10 +9,10 @@ export const WELCOME_MESSAGE_QUERY = gql`
 // Query by name
 export const GET_POKEMON_BY_NAME = gql`
   query GetPokemonByName($name: String!) {
-    pokemonByName(name: $name) {
+    pokemon(name: $name) {
       id
       name
-      type
+      types
     }
   }
 `;
@@ -23,7 +23,7 @@ export const GET_POKEMON_BY_ID = gql`
     pokemon(id: $id) {
       id
       name
-      type
+      types
     }
   }
 `;
