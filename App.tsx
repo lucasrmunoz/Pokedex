@@ -22,6 +22,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
   // useColorScheme,
 } from 'react-native';
 import {useState} from 'react';
@@ -99,7 +100,18 @@ function PokemonSearchBox(): React.JSX.Element {
           <Text style={styles.pokemonResultName}>
             {data.pokemon.name.toUpperCase()}
           </Text>
-          
+
+          {/* Pokemon Sprite */}
+          {data.pokemon.spriteUrl && (
+            <View style={styles.spriteContainer}>
+              <Image
+                source={{uri: data.pokemon.spriteUrl}}
+                style={styles.pokemonSprite}
+                resizeMode="contain"
+              />
+            </View>
+          )}
+
           {/* Key-Value Pairs Section */}
           <View style={styles.keyValueSection}>
             <Text style={styles.sectionTitle}>Pokemon Details</Text>
@@ -170,24 +182,22 @@ function WelcomeMessageSection(): React.JSX.Element {
   return <Section title="Server Message">{data.welcomeMessage}</Section>;
 }
 
-function WelcomeSquirtleSection(): React.JSX.Element {
-  const {loading, error, data} = useQuery(GET_POKEMON_BY_NAME, {
-    variables: {name: 'squirtle'},
-  });
+// function WelcomeSquirtleSection(): React.JSX.Element {
+//   const {loading, error, data} = useQuery(GET_POKEMON_BY_NAME, {
+//     variables: {name: 'squirtle'},
+//   });
 
-  if (loading) return <Section title="Welcome">Loading...</Section>;
+//   if (loading) return <Section title="Welcome">Loading...</Section>;
 
-  if (error) return <Section title="Welcome">Error loading Pokemon</Section>;
+//   if (error) return <Section title="Welcome">Error loading Pokemon</Section>;
 
-  return (
-    <Section title="Welcome">
-      Hi,{' '}
-      {data.pokemon.name.charAt(0).toUpperCase() +
-        data.pokemon.name.slice(1)}
-      !
-    </Section>
-  );
-}
+//   return (
+//     <Section title="Welcome">
+//       Hi,{' '}
+//       {data.pokemon.name.charAt(0).toUpperCase() + data.pokemon.name.slice(1)}!
+//     </Section>
+//   );
+// }
 
 function PokemonSection(): React.JSX.Element {
   const {loading, error, data} = useQuery(GET_POKEMON_BY_NAME, {
@@ -210,7 +220,8 @@ function PokemonSection(): React.JSX.Element {
       <View style={styles.pokemonDetails}>
         <Text style={styles.detailText}>ID: {data.pokemon.id}</Text>
         <Text style={styles.detailText}>
-          Types: {data.pokemon.types && data.pokemon.types.length > 0
+          Types:{' '}
+          {data.pokemon.types && data.pokemon.types.length > 0
             ? data.pokemon.types.join(', ')
             : 'No types found'}
         </Text>
@@ -223,31 +234,34 @@ function App(): React.JSX.Element {
   const isDarkMode = true; // useColorScheme() === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: Colors.softRed,
   };
 
   return (
     <ApolloProvider client={client}>
-      <SafeAreaView style={backgroundStyle}>
+      <SafeAreaView style={[backgroundStyle, {flex: 1}]}>
         <StatusBar
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={backgroundStyle.backgroundColor}
+          backgroundColor={Colors.softRed}
         />
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
-          style={backgroundStyle}>
+          style={backgroundStyle}
+          contentContainerStyle={{flexGrow: 1}}>
           <Header />
           <View
             style={{
-              backgroundColor: isDarkMode ? Colors.black : Colors.white,
+              backgroundColor: Colors.softRed,
+              flex: 1,
+              minHeight: '100%',
             }}>
-              <PokemonSearchBox />
+            <PokemonSearchBox />
             <WelcomeMessageSection />
-            <WelcomeSquirtleSection />
+            {/* <WelcomeSquirtleSection /> */}
             <PokemonSection />
-            <Section title="Learn More">
-              Read the docs to discover what to do next:
-            </Section>
+            {/* <Section title="Learn More"> */}
+              {/* Read the docs to discover what to do next: */}
+            {/* </Section> */}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -376,6 +390,14 @@ const styles = StyleSheet.create({
     color: Colors.white,
     flex: 2,
     textAlign: 'right',
+  },
+  spriteContainer: {
+    alignItems: 'center',
+    marginVertical: 16,
+  },
+  pokemonSprite: {
+    width: 150,
+    height: 150,
   },
 });
 

@@ -12,6 +12,8 @@ export const Colors = {
   light: '#f5f5f5',
   white: '#FFFFFF',
   black: '#000000',
+  // Soft muted red background
+  softRed: '#D4A5A5',
 };
 
 export default Colors;

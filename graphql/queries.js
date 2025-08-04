@@ -13,6 +13,7 @@ export const GET_POKEMON_BY_NAME = gql`
       id
       name
       types
+      spriteUrl
     }
   }
 `;
