@@ -10,7 +10,7 @@ import type {PropsWithChildren} from 'react';
 import {ApolloProvider} from '@apollo/client';
 import client from './apolloClient'; // Adjust the path if necessary
 import {useQuery} from '@apollo/client';
-import {WELCOME_MESSAGE_QUERY, GET_POKEMON_BY_NAME} from './graphql/queries';
+import {WELCOME_MESSAGE_QUERY, GET_POKEMON_BY_NAME, GET_POKEMON_BY_ID} from './graphql/queries';
 // import Header from './Libraries/NewAppScreen/components/Header';
 // import {useQuery} from '@apollo/client';
 import {
@@ -19,7 +19,6 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
   Image,
@@ -34,78 +33,94 @@ type SectionProps = PropsWithChildren<{
   title: string;
 }>;
 
-function PokemonSearchBox(): React.JSX.Element {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+function PokemonScroller(): React.JSX.Element {
+  const [pokemonId, setPokemonId] = useState(1);
   const isDarkMode = true;
 
-  const {loading, error, data} = useQuery(GET_POKEMON_BY_NAME, {
-    variables: {name: searchQuery.toLowerCase()},
-    skip: !searchQuery, // Skip query if no search term
+  const {loading, error, data} = useQuery(GET_POKEMON_BY_ID, {
+    variables: {id: pokemonId},
   });
 
-  const handleSearch = () => {
-    if (searchTerm.trim()) {
-      setSearchQuery(searchTerm.trim());
-    }
+  const handleArrowPress = (direction: 'up' | 'down' | 'left' | 'right') => {
+    setPokemonId(prevId => {
+      if (direction === 'up' || direction === 'right') {
+        return prevId < 151 ? prevId + 1 : prevId;
+      } else {
+        return prevId > 1 ? prevId - 1 : prevId;
+      }
+    });
   };
 
   return (
-    <View style={styles.searchContainer}>
+    <View style={styles.scrollerContainer}>
       <Text
         style={[
-          styles.searchTitle,
+          styles.scrollerTitle,
           {color: isDarkMode ? Colors.white : Colors.black},
         ]}>
-        Search Pokemon
+        Pokemon Browser
       </Text>
 
-      <View style={styles.searchInputContainer}>
-        <TextInput
-          style={[
-            styles.searchInput,
-            {
-              backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-              color: isDarkMode ? Colors.white : Colors.black,
-              borderColor: isDarkMode ? Colors.light : Colors.dark,
-            },
-          ]}
-          placeholder="Enter Pokemon name..."
-          placeholderTextColor={isDarkMode ? Colors.light : Colors.dark}
-          value={searchTerm}
-          onChangeText={setSearchTerm}
-          onSubmitEditing={handleSearch}
-          returnKeyType="search"
-        />
-        <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-          <Text style={styles.searchButtonText}>Search</Text>
-        </TouchableOpacity>
+      {/* Pokemon ID Display */}
+      <View style={styles.idDisplay}>
+        <Text style={styles.idText}>#{pokemonId} {data.pokemonById.name}</Text>
       </View>
 
-      {/* Search Results */}
-      {loading && searchQuery && (
+      {/* Arrow Controls */}
+      <View style={styles.arrowContainer}>
+        <View style={styles.arrowRow}>
+          <TouchableOpacity
+            style={styles.arrowButton}
+            onPress={() => handleArrowPress('up')}>
+            <Text style={styles.arrowText}>▲</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.arrowMiddleRow}>
+          <TouchableOpacity
+            style={styles.arrowButton}
+            onPress={() => handleArrowPress('left')}>
+            <Text style={styles.arrowText}>◄</Text>
+          </TouchableOpacity>
+          <View style={styles.arrowSpacer} />
+          <TouchableOpacity
+            style={styles.arrowButton}
+            onPress={() => handleArrowPress('right')}>
+            <Text style={styles.arrowText}>►</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.arrowRow}>
+          <TouchableOpacity
+            style={styles.arrowButton}
+            onPress={() => handleArrowPress('down')}>
+            <Text style={styles.arrowText}>▼</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Pokemon Data Display */}
+      {loading && (
         <Text style={[styles.resultText, {color: Colors.light}]}>
-          Searching for {searchQuery}...
+          Loading Pokemon #{pokemonId}...
         </Text>
       )}
 
       {error && (
         <Text style={[styles.resultText, {color: Colors.light}]}>
-          Pokemon "{searchQuery}" not found! - {error.message}
+          Error loading Pokemon: {error.message}
         </Text>
       )}
 
-      {data && data.pokemon && (
+      {data && data.pokemonById && (
         <View style={styles.pokemonResult}>
           <Text style={styles.pokemonResultName}>
-            {data.pokemon.name.toUpperCase()}
+            {data.pokemonById.name.toUpperCase()}
           </Text>
 
           {/* Pokemon Sprite */}
-          {data.pokemon.spriteUrl && (
+          {data.pokemonById.spriteUrl && (
             <View style={styles.spriteContainer}>
               <Image
-                source={{uri: data.pokemon.spriteUrl}}
+                source={{uri: data.pokemonById.spriteUrl}}
                 style={styles.pokemonSprite}
                 resizeMode="contain"
               />
@@ -118,17 +133,17 @@ function PokemonSearchBox(): React.JSX.Element {
             <View style={styles.keyValueContainer}>
               <View style={styles.keyValueRow}>
                 <Text style={styles.keyText}>ID:</Text>
-                <Text style={styles.valueText}>{data.pokemon.id}</Text>
+                <Text style={styles.valueText}>{data.pokemonById.id}</Text>
               </View>
               <View style={styles.keyValueRow}>
                 <Text style={styles.keyText}>Name:</Text>
-                <Text style={styles.valueText}>{data.pokemon.name}</Text>
+                <Text style={styles.valueText}>{data.pokemonById.name}</Text>
               </View>
               <View style={styles.keyValueRow}>
                 <Text style={styles.keyText}>Types:</Text>
                 <Text style={styles.valueText}>
-                  {data.pokemon.types && data.pokemon.types.length > 0
-                    ? data.pokemon.types.join(', ')
+                  {data.pokemonById.types && data.pokemonById.types.length > 0
+                    ? data.pokemonById.types.join(', ')
                     : 'No types found'}
                 </Text>
               </View>
@@ -255,7 +270,7 @@ function App(): React.JSX.Element {
               flex: 1,
               minHeight: '100%',
             }}>
-            <PokemonSearchBox />
+            <PokemonScroller />
             <WelcomeMessageSection />
             {/* <WelcomeSquirtleSection /> */}
             <PokemonSection />
@@ -303,38 +318,56 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: Colors.white,
   },
-  searchContainer: {
+  scrollerContainer: {
     marginTop: 20,
     paddingHorizontal: 24,
   },
-  searchTitle: {
+  scrollerTitle: {
     fontSize: 24,
     fontWeight: '600',
     marginBottom: 16,
+    textAlign: 'center',
   },
-  searchInputContainer: {
+  idDisplay: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  idText: {
+    fontSize: 48,
+    fontWeight: 'bold',
+    color: Colors.white,
+  },
+  arrowContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  arrowRow: {
     flexDirection: 'row',
-    marginBottom: 16,
-    gap: 8,
-  },
-  searchInput: {
-    flex: 1,
-    height: 50,
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    fontSize: 16,
-  },
-  searchButton: {
-    backgroundColor: Colors.darker,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 8,
     justifyContent: 'center',
   },
-  searchButtonText: {
+  arrowMiddleRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  arrowButton: {
+    backgroundColor: Colors.darker,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 5,
+  },
+  arrowSpacer: {
+    width: 60,
+    height: 60,
+    margin: 5,
+  },
+  arrowText: {
+    fontSize: 24,
     color: Colors.white,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
   resultText: {
     fontSize: 16,
