@@ -20,11 +20,12 @@ export const GET_POKEMON_BY_NAME = gql`
 
 // Query by ID
 export const GET_POKEMON_BY_ID = gql`
-  query GetPokemonById($id: ID!) {
-    pokemon(id: $id) {
+  query GetPokemonById($id: Int!) {
+    pokemonById(id: $id) {
       id
       name
       types
+      spriteUrl
     }
   }
 `;
