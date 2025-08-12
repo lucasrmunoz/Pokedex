@@ -68,36 +68,7 @@ function PokemonScroller(): React.JSX.Element {
         </Text>
       </View>
 
-      {/* Arrow Controls */}
-      <View style={styles.arrowContainer}>
-        <View style={styles.arrowRow}>
-          <TouchableOpacity
-            style={styles.arrowButton}
-            onPress={() => handleArrowPress('up')}>
-            <Text style={styles.arrowText}>▲</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.arrowMiddleRow}>
-          <TouchableOpacity
-            style={styles.arrowButton}
-            onPress={() => handleArrowPress('left')}>
-            <Text style={styles.arrowText}>◄</Text>
-          </TouchableOpacity>
-          <View style={styles.arrowSpacer} />
-          <TouchableOpacity
-            style={styles.arrowButton}
-            onPress={() => handleArrowPress('right')}>
-            <Text style={styles.arrowText}>►</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.arrowRow}>
-          <TouchableOpacity
-            style={styles.arrowButton}
-            onPress={() => handleArrowPress('down')}>
-            <Text style={styles.arrowText}>▼</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      
 
       {/* Pokemon Data Display */}
       {loading && (
@@ -153,6 +124,37 @@ function PokemonScroller(): React.JSX.Element {
           </View>
         </View>
       )}
+
+      {/* Arrow Controls */}
+      <View style={styles.arrowContainer}>
+        <View style={styles.arrowRow}>
+          <TouchableOpacity
+            style={styles.arrowButton}
+            onPress={() => handleArrowPress('up')}>
+            <Text style={styles.arrowText}>▲</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.arrowMiddleRow}>
+          <TouchableOpacity
+            style={styles.arrowButton}
+            onPress={() => handleArrowPress('left')}>
+            <Text style={styles.arrowText}>◄</Text>
+          </TouchableOpacity>
+          <View style={styles.arrowSpacer} />
+          <TouchableOpacity
+            style={styles.arrowButton}
+            onPress={() => handleArrowPress('right')}>
+            <Text style={styles.arrowText}>►</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.arrowRow}>
+          <TouchableOpacity
+            style={styles.arrowButton}
+            onPress={() => handleArrowPress('down')}>
+            <Text style={styles.arrowText}>▼</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }
