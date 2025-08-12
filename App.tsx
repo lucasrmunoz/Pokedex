@@ -265,7 +265,6 @@ function App(): React.JSX.Element {
           contentInsetAdjustmentBehavior="automatic"
           style={backgroundStyle}
           contentContainerStyle={{flexGrow: 1}}>
-          <Header />
           <View
             style={{
               backgroundColor: Colors.softRed,
@@ -273,9 +272,9 @@ function App(): React.JSX.Element {
               minHeight: '100%',
             }}>
             <PokemonScroller />
-            <WelcomeMessageSection />
+            {/* <WelcomeMessageSection /> */}
             {/* <WelcomeSquirtleSection /> */}
-            <PokemonSection />
+            {/* <PokemonSection /> */}
             {/* <Section title="Learn More"> */}
               {/* Read the docs to discover what to do next: */}
             {/* </Section> */}
