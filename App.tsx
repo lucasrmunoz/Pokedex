@@ -6,11 +6,10 @@
  */
 
 import React from 'react';
-import type {PropsWithChildren} from 'react';
 import {ApolloProvider} from '@apollo/client';
 import client from './apolloClient'; // Adjust the path if necessary
 import {useQuery} from '@apollo/client';
-import {WELCOME_MESSAGE_QUERY, GET_POKEMON_BY_NAME, GET_POKEMON_BY_ID} from './graphql/queries';
+import {GET_POKEMON_BY_NAME, GET_POKEMON_BY_ID} from './graphql/queries';
 // import Header from './Libraries/NewAppScreen/components/Header';
 // import {useQuery} from '@apollo/client';
 import {
@@ -27,11 +26,7 @@ import {
 import {useState} from 'react';
 
 import Colors from './src/theme/colors';
-import Header from './src/components/Header';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+// import Header from './src/components/Header';
 
 function PokemonScroller(): React.JSX.Element {
   const [pokemonId, setPokemonId] = useState(1);
@@ -68,13 +63,45 @@ function PokemonScroller(): React.JSX.Element {
         </Text>
       </View>
 
-      
-
       {/* Pokemon Data Display */}
       {loading && (
-        <Text style={[styles.resultText, {color: Colors.light}]}>
-          Loading Pokemon #{pokemonId}...
-        </Text>
+        <View style={styles.pokemonResult}>
+          <Text style={styles.pokemonResultName}>
+            {/* {data.pokemonById.name.toUpperCase()} */}
+          </Text>
+
+          {/* Pokemon Sprite */}
+          {/* {data.pokemonById.spriteUrl && ( */}
+            <View style={styles.spriteContainer}>
+              <Image
+                source={{uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png'}}
+                style={styles.pokemonSprite}
+                resizeMode="contain"
+              />
+            </View>
+          {/* )} */}
+
+          {/* Key-Value Pairs Section */}
+          <View style={styles.keyValueSection}>
+            <Text style={styles.sectionTitle}>Pokemon Details</Text>
+            <View style={styles.keyValueContainer}>
+              <View style={styles.keyValueRow}>
+                <Text style={styles.keyText}>ID:</Text>
+                <Text style={styles.valueText}>No data</Text>
+              </View>
+              <View style={styles.keyValueRow}>
+                <Text style={styles.keyText}>Name:</Text>
+                <Text style={styles.valueText}>No data</Text>
+              </View>
+              <View style={styles.keyValueRow}>
+                <Text style={styles.keyText}>Types:</Text>
+                <Text style={styles.valueText}>
+                  'No pokemon found'
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
       )}
 
       {error && (
@@ -159,96 +186,6 @@ function PokemonScroller(): React.JSX.Element {
   );
 }
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = true; // useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function WelcomeMessageSection(): React.JSX.Element {
-  const {loading, error, data} = useQuery(WELCOME_MESSAGE_QUERY);
-
-  if (loading) {
-    return <Section title="Loading">Fetching welcome message...</Section>;
-  }
-
-  if (error) {
-    return (
-      <Section title="Error">Error fetching message: {error.message}</Section>
-    );
-  }
-
-  return <Section title="Server Message">{data.welcomeMessage}</Section>;
-}
-
-// function WelcomeSquirtleSection(): React.JSX.Element {
-//   const {loading, error, data} = useQuery(GET_POKEMON_BY_NAME, {
-//     variables: {name: 'squirtle'},
-//   });
-
-//   if (loading) return <Section title="Welcome">Loading...</Section>;
-
-//   if (error) return <Section title="Welcome">Error loading Pokemon</Section>;
-
-//   return (
-//     <Section title="Welcome">
-//       Hi,{' '}
-//       {data.pokemon.name.charAt(0).toUpperCase() + data.pokemon.name.slice(1)}!
-//     </Section>
-//   );
-// }
-
-function PokemonSection(): React.JSX.Element {
-  const {loading, error, data} = useQuery(GET_POKEMON_BY_NAME, {
-    variables: {name: 'squirtle'},
-  });
-
-  if (loading)
-    return <Section title="Loading">Fetching Pokemon data...</Section>;
-
-  if (error)
-    return (
-      <Section title="Error">Error fetching Pokemon: {error.message}</Section>
-    );
-
-  return (
-    <View>
-      <Text style={styles.pokemonHeader}>
-        {data.pokemon.name.toUpperCase()}
-      </Text>
-      <View style={styles.pokemonDetails}>
-        <Text style={styles.detailText}>ID: {data.pokemon.id}</Text>
-        <Text style={styles.detailText}>
-          Types:{' '}
-          {data.pokemon.types && data.pokemon.types.length > 0
-            ? data.pokemon.types.join(', ')
-            : 'No types found'}
-        </Text>
-      </View>
-    </View>
-  );
-}
-
 function App(): React.JSX.Element {
   const isDarkMode = true; // useColorScheme() === 'dark';
 
@@ -274,12 +211,6 @@ function App(): React.JSX.Element {
               minHeight: '100%',
             }}>
             <PokemonScroller />
-            {/* <WelcomeMessageSection /> */}
-            {/* <WelcomeSquirtleSection /> */}
-            {/* <PokemonSection /> */}
-            {/* <Section title="Learn More"> */}
-              {/* Read the docs to discover what to do next: */}
-            {/* </Section> */}
           </View>
         </ScrollView>
       </SafeAreaView>
