@@ -38,7 +38,7 @@ function PokemonScroller(): React.JSX.Element {
 
   const handleArrowPress = (direction: 'up' | 'down' | 'left' | 'right') => {
     setPokemonId(prevId => {
-      if (direction === 'up' || direction === 'right') {
+      if (direction === 'down' || direction === 'right') {
         return prevId < 151 ? prevId + 1 : prevId;
       } else {
         return prevId > 1 ? prevId - 1 : prevId;
@@ -190,9 +190,18 @@ function PokemonScroller(): React.JSX.Element {
           </View>
         </View>
 
-        {/* Right Column - Empty for now, can add more controls later */}
+        {/* Right Column - A/B Buttons */}
         <View style={styles.rightControlColumn}>
-          {/* Space for additional controls if needed */}
+          <View style={styles.abButtonContainer}>
+            {/* B Button (left, lower) */}
+            <TouchableOpacity style={[styles.abButton, styles.bButton]}>
+              <Text style={styles.abButtonText}>B</Text>
+            </TouchableOpacity>
+            {/* A Button (right, higher) */}
+            <TouchableOpacity style={[styles.abButton, styles.aButton]}>
+              <Text style={styles.abButtonText}>A</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
@@ -295,6 +304,8 @@ const styles = StyleSheet.create({
   },
   rightControlColumn: {
     flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
   },
   dpadContainer: {
     width: 120,
@@ -344,6 +355,42 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Colors.white,
     fontWeight: 'bold',
+  },
+  abButtonContainer: {
+    width: 120,
+    height: 80,
+    position: 'relative',
+    marginRight: 16,
+  },
+  abButton: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: Colors.darker,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  bButton: {
+    left: 0,
+    bottom: 0,
+  },
+  aButton: {
+    right: 0,
+    top: 0,
+  },
+  abButtonText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: Colors.white,
   },
   resultText: {
     fontSize: 16,
