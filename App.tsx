@@ -9,7 +9,7 @@ import React from 'react';
 import {ApolloProvider} from '@apollo/client';
 import client from './apolloClient'; // Adjust the path if necessary
 import {useQuery} from '@apollo/client';
-import {GET_POKEMON_BY_NAME, GET_POKEMON_BY_ID} from './graphql/queries';
+import {GET_POKEMON_BY_ID} from './graphql/queries';
 // import Header from './Libraries/NewAppScreen/components/Header';
 // import {useQuery} from '@apollo/client';
 import {
@@ -152,34 +152,47 @@ function PokemonScroller(): React.JSX.Element {
         </View>
       )}
 
-      {/* Arrow Controls */}
-      <View style={styles.arrowContainer}>
-        <View style={styles.arrowRow}>
-          <TouchableOpacity
-            style={styles.arrowButton}
-            onPress={() => handleArrowPress('up')}>
-            <Text style={styles.arrowText}>▲</Text>
-          </TouchableOpacity>
+      {/* Two Column Layout for Controls */}
+      <View style={styles.controlsContainer}>
+        {/* Left Column - D-Pad Controls */}
+        <View style={styles.leftControlColumn}>
+          <View style={styles.dpadContainer}>
+            {/* D-Pad Up Button */}
+            <View style={styles.dpadRow}>
+              <TouchableOpacity
+                style={[styles.dpadButton, styles.dpadUp]}
+                onPress={() => handleArrowPress('up')}>
+                <Text style={styles.dpadText}>▲</Text>
+              </TouchableOpacity>
+            </View>
+            {/* D-Pad Middle Row */}
+            <View style={styles.dpadMiddleRow}>
+              <TouchableOpacity
+                style={[styles.dpadButton, styles.dpadLeft]}
+                onPress={() => handleArrowPress('left')}>
+                <Text style={styles.dpadText}>◄</Text>
+              </TouchableOpacity>
+              <View style={styles.dpadCenter} />
+              <TouchableOpacity
+                style={[styles.dpadButton, styles.dpadRight]}
+                onPress={() => handleArrowPress('right')}>
+                <Text style={styles.dpadText}>►</Text>
+              </TouchableOpacity>
+            </View>
+            {/* D-Pad Down Button */}
+            <View style={styles.dpadRow}>
+              <TouchableOpacity
+                style={[styles.dpadButton, styles.dpadDown]}
+                onPress={() => handleArrowPress('down')}>
+                <Text style={styles.dpadText}>▼</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-        <View style={styles.arrowMiddleRow}>
-          <TouchableOpacity
-            style={styles.arrowButton}
-            onPress={() => handleArrowPress('left')}>
-            <Text style={styles.arrowText}>◄</Text>
-          </TouchableOpacity>
-          <View style={styles.arrowSpacer} />
-          <TouchableOpacity
-            style={styles.arrowButton}
-            onPress={() => handleArrowPress('right')}>
-            <Text style={styles.arrowText}>►</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.arrowRow}>
-          <TouchableOpacity
-            style={styles.arrowButton}
-            onPress={() => handleArrowPress('down')}>
-            <Text style={styles.arrowText}>▼</Text>
-          </TouchableOpacity>
+
+        {/* Right Column - Empty for now, can add more controls later */}
+        <View style={styles.rightControlColumn}>
+          {/* Space for additional controls if needed */}
         </View>
       </View>
     </View>
@@ -254,7 +267,7 @@ const styles = StyleSheet.create({
   },
   scrollerContainer: {
     marginTop: 20,
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
   },
   scrollerTitle: {
     fontSize: 24,
@@ -264,42 +277,71 @@ const styles = StyleSheet.create({
   },
   idDisplay: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   idText: {
     fontSize: 48,
     fontWeight: 'bold',
     color: Colors.white,
   },
-  arrowContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
+  controlsContainer: {
+    flexDirection: 'row',
+    marginTop: 20,
+    paddingHorizontal: 8,
   },
-  arrowRow: {
+  leftControlColumn: {
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  rightControlColumn: {
+    flex: 1,
+  },
+  dpadContainer: {
+    width: 120,
+    height: 120,
+    position: 'relative',
+  },
+  dpadRow: {
     flexDirection: 'row',
     justifyContent: 'center',
+    height: 40,
   },
-  arrowMiddleRow: {
+  dpadMiddleRow: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    height: 40,
   },
-  arrowButton: {
+  dpadButton: {
     backgroundColor: Colors.darker,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 40,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 5,
   },
-  arrowSpacer: {
-    width: 60,
-    height: 60,
-    margin: 5,
+  dpadUp: {
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
   },
-  arrowText: {
-    fontSize: 24,
+  dpadDown: {
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+  dpadLeft: {
+    borderTopLeftRadius: 8,
+    borderBottomLeftRadius: 8,
+  },
+  dpadRight: {
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+  dpadCenter: {
+    width: 40,
+    height: 40,
+    backgroundColor: Colors.black,
+  },
+  dpadText: {
+    fontSize: 20,
     color: Colors.white,
     fontWeight: 'bold',
   },
@@ -312,7 +354,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.darker,
     borderRadius: 12,
     padding: 16,
-    marginTop: 16,
   },
   pokemonResultName: {
     fontSize: 28,
@@ -360,7 +401,7 @@ const styles = StyleSheet.create({
   },
   spriteContainer: {
     alignItems: 'center',
-    marginVertical: 16,
+    marginVertical: 12,
   },
   pokemonSprite: {
     width: 150,
